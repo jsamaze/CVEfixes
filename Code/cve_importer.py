@@ -19,11 +19,10 @@ import configuration as cf
 import database as db
 
 # ---------------------------------------------------------------------------------------------------------------------
-
 urlhead = 'https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-'
 urltail = '.json.zip'
 initYear = 2002
-currentYear = datetime.datetime.now().year
+currentYear = 2023
 
 # Consider only current year CVE records when sample_limit>0 for the simplified example.
 if cf.SAMPLE_LIMIT > 0:
@@ -125,6 +124,7 @@ def assign_cwes_to_cves(df_cve: pd.DataFrame):
     assert df_cwes.cwe_id.is_unique, "Primary keys are not unique in cwe records!"
     assert df_cwes_class.set_index(['cve_id', 'cwe_id']).index.is_unique, \
         'Primary keys are not unique in cwe_classification records!'
+    print (set(list(df_cwes_class.cwe_id)).difference(set(list(df_cwes.cwe_id))))
     assert set(list(df_cwes_class.cwe_id)).issubset(set(list(df_cwes.cwe_id))), \
         'Not all foreign keys for the cwe_classification records are present in the cwe table!'
 
@@ -165,9 +165,14 @@ def import_cves():
                     df_cve = df_cve.append(pd.DataFrame(yearly_data))
                 cf.logger.info(f'The CVE json for {year} has been merged')
 
+        # Tacky solution to one problematic CVE record
+
         df_cve = preprocess_jsons(df_cve)
         df_cve = df_cve.applymap(str)
         assert df_cve.cve_id.is_unique, 'Primary keys are not unique in cve records!'
+        
+        df_cve = df_cve[df_cve.cve_id != 'CVE-2022-4147']
+
         df_cve.to_sql(name="cve", con=db.conn, if_exists="replace", index=False)
         cf.logger.info('All CVEs have been merged into the cve table')
         cf.logger.info('-' * 70)
