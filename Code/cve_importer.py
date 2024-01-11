@@ -157,7 +157,7 @@ def import_cves():
                 z = ZipFile(BytesIO(r.content))  # BytesIO keeps the file in memory
                 json_file = z.extract(extract_target, Path(cf.DATA_PATH) / 'json')
 
-            with open(json_file) as f:
+            with open(json_file, encoding='utf8') as f:
                 yearly_data = json.load(f)
                 if year == initYear:  # initialize the df_methods by the first year data
                     df_cve = pd.DataFrame(yearly_data)

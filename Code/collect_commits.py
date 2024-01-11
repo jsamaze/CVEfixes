@@ -323,6 +323,9 @@ def extract_commits(repo_url, hashes):
         single_hash = hashes[0]
         hashes = None
 
+    # print("a", repo_url, "b", hashes , "c", single_hash)
+    # print("Joshua LOOK HERE")
+
     for commit in Repository(path_to_repo=repo_url,
                              only_commits=hashes,
                              single=single_hash,
