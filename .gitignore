@@ -1,3 +1,6 @@
 .CVEfixes.ini
 CVEfixes*.db
 CVEfixes*.sql.gz
+Data
+Data_1
+Code/__pycache__
