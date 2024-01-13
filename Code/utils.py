@@ -99,7 +99,7 @@ def prune_tables(datafile):
     df_commit = pd.read_sql('SELECT * FROM commits', con=connf)
     df_cve = pd.read_sql('SELECT * FROM cve', con=connf)
     df_file = pd.read_sql('SELECT * FROM file_change', con=connf)
-    df_method = pd.read_sql('SELECT * FROM method_change', con=connf)
+    df_method = pd.read_sql('SELECT * FROM method_change', con=connf) # error : memory error
     df_fixes = pd.read_sql('SELECT * FROM fixes', con=connf)
     df_cwe_class = pd.read_sql('SELECT * FROM cwe_classification', con=connf)
     df_cwe = pd.read_sql('SELECT * FROM cwe', con=connf)
