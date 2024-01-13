@@ -4,6 +4,7 @@ import time
 from math import floor
 from github import Github
 from github.GithubException import BadCredentialsException
+from problematic import problematic
 
 import configuration as cf
 import database as db
@@ -175,9 +176,18 @@ def store_tables(df_fixes):
     # hashes = ['003c62d28ae438aa8943cb31535563397f838a2c', 'fd']
     pcount = 0
 
+    repo_urls = list(repo_urls)
+    repo_urls= list(filter(lambda x : x.find("bitbucket") == -1 and x not in problematic, repo_urls))
+    problematic_repo_urls = []
+
     for repo_url in repo_urls:
+
+        cf.logger.info(f"Problematic {problematic_repo_urls}")
         pcount += 1
         try:
+            if (repo_url.find("torvalds") > -1):
+                raise Exception()
+            
             df_single_repo = df_fixes[df_fixes.repo_url == repo_url]
             hashes = list(df_single_repo.hash.unique())
             cf.logger.info('-' * 70)
@@ -206,9 +216,11 @@ def store_tables(df_fixes):
                     save_repo_meta(repo_url)
             else:
                 cf.logger.warning(f'Could not retrieve commit information from: {repo_url}')
+                problematic_repo_urls.append(repo_url)
 
         except Exception as e:
             cf.logger.warning(f'Problem occurred while retrieving the project: {repo_url}: {e}')
+            problematic_repo_urls.append(repo_url)
             pass  # skip fetching repository if is not available.
 
     cf.logger.debug('-' * 70)
