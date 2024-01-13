@@ -1,6 +1,11 @@
 [![source under MIT licence](https://img.shields.io/badge/source%20license-MIT-green)](LICENSE.txt)
 [![data under CC BY 4.0 license](https://img.shields.io/badge/data%20license-CC%20BY%204.0-green)](https://creativecommons.org/licenses/by/4.0/)
 
+# Notes by Joshua
+- Issue 1 : CVE-2022-4147 refers to CWE-1026 which for some reason is not in the CWE database. Note that CWE-1026 is not in the [list](https://nvd.nist.gov/vuln/categories) of CWE created by NIST. I have decided to remove this CVE in `cve_importer.py` line `174`     
+- Issue 2 : From an unknown number of total repositories, ~4025 repositories were determined to be available (as tested by sending a `HTTP GET` request). Out of these, 392 repositories failed to be processed. The cause is undetermined and possibly not the same for all failed repository as the error message displayed are different. Hence, around 90.3% of repository was successfully collected. Note: problematic repo urls are collected in problematic.py.
+- Issue 3 : During data pruning, the attempt by pandas to read all of the data in the methods table always result in `Memory Error` exception, perhaps, my laptop 16 GB RAM is insufficient. Regardless, I commented out the codes that are related to processing the method tables, and the pruning was successful.
+
 # CVEfixes: Automated Collection of Vulnerabilities and Their Fixes from Open-Source Software
 
 _CVEfixes_ is a comprehensive vulnerability dataset that is automatically
